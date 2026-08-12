@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import "./index.css";
 
-const API_URL = "http://localhost:3000";
-//change URL for deploymnt
-type Author = {
-    username: string;
-};
+const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 type Post = {
     id: number;
@@ -13,7 +10,9 @@ type Post = {
     created_at: string;
     updated_at: string;
     authorId: number;
-    author?: Author;
+    author?: {
+        username: string;
+    };
 };
 
 type Comment = {
@@ -23,7 +22,9 @@ type Comment = {
     updated_at: string;
     authorId: number;
     postId: number;
-    author?: Author;
+    author?: {
+        username: string;
+    };
 };
 
 type AuthResponse = {
@@ -84,9 +85,9 @@ function App() {
 
     const [showAuth, setShowAuth] = useState(false);
 
-    const [authMode, setAuthMode] = useState<"login" | "signup">(
-        "login"
-    );
+    const [authMode, setAuthMode] = useState<
+        "login" | "signup"
+    >("signup");
 
     const [authUsername, setAuthUsername] = useState("");
     const [authPassword, setAuthPassword] = useState("");
@@ -94,19 +95,18 @@ function App() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [newPost, setNewPost] = useState("");
 
-    const [editingPostId, setEditingPostId] = useState<number | null>(
-        null
-    );
+    const [editingPostId, setEditingPostId] =
+        useState<number | null>(null);
 
-    const [editingContent, setEditingContent] = useState("");
+    const [editingContent, setEditingContent] =
+        useState("");
 
     const [comments, setComments] = useState<
         Record<number, Comment[]>
     >({});
 
-    const [commentInputs, setCommentInputs] = useState<
-        Record<number, string>
-    >({});
+    const [commentInputs, setCommentInputs] =
+        useState<Record<number, string>>({});
 
     const [likedPosts, setLikedPosts] = useState<
         Record<number, boolean>
@@ -167,7 +167,7 @@ function App() {
 
             if (authMode === "signup") {
                 showMessage(
-                    "Account created. Please login."
+                    "Account created. Please log in."
                 );
 
                 setAuthMode("login");
@@ -186,9 +186,8 @@ function App() {
                 return;
             }
 
-            const decodedUserId = getUserIdFromToken(
-                authData.token
-            );
+            const decodedUserId =
+                getUserIdFromToken(authData.token);
 
             localStorage.setItem(
                 "token",
@@ -206,9 +205,10 @@ function App() {
 
             setAuthUsername("");
             setAuthPassword("");
+
             setShowAuth(false);
 
-            showMessage("Login successful.");
+            showMessage("Welcome to miniSocial.");
         } catch {
             showMessage(
                 "Could not connect to backend."
@@ -229,7 +229,6 @@ function App() {
         setPosts([]);
         setComments({});
         setLikedPosts({});
-        setShowAuth(false);
     }
 
     async function fetchPosts() {
@@ -256,7 +255,8 @@ function App() {
                 return;
             }
 
-            const result = data as PostsResponse;
+            const result =
+                data as PostsResponse;
 
             setPosts(result.posts);
         } catch {
@@ -269,7 +269,6 @@ function App() {
     async function createPost() {
         if (!newPost.trim()) {
             showMessage("Post cannot be empty.");
-
             return;
         }
 
@@ -296,7 +295,8 @@ function App() {
                 return;
             }
 
-            const result = data as PostResponse;
+            const result =
+                data as PostResponse;
 
             setPosts((current) => [
                 result.post,
@@ -316,7 +316,6 @@ function App() {
     async function updatePost(postId: number) {
         if (!editingContent.trim()) {
             showMessage("Post cannot be empty.");
-
             return;
         }
 
@@ -343,14 +342,15 @@ function App() {
                 return;
             }
 
-            const result = data as PostResponse;
+            const result =
+                data as PostResponse;
 
             setPosts((current) =>
                 current.map((post) =>
                     post.id === postId
                         ? {
+                              ...post,
                               ...result.post,
-                              author: post.author,
                           }
                         : post
                 )
@@ -404,9 +404,7 @@ function App() {
 
             setComments((current) => {
                 const copy = { ...current };
-
                 delete copy[postId];
-
                 return copy;
             });
 
@@ -438,7 +436,8 @@ function App() {
                 return;
             }
 
-            const result = data as CommentsResponse;
+            const result =
+                data as CommentsResponse;
 
             setComments((current) => ({
                 ...current,
@@ -486,12 +485,8 @@ function App() {
                 return;
             }
 
-            const comment = {
-                ...(data.comment as Comment),
-                author: {
-                    username,
-                },
-            };
+            const comment =
+                data.comment as Comment;
 
             setComments((current) => ({
                 ...current,
@@ -588,8 +583,6 @@ function App() {
                 ...current,
                 [postId]: true,
             }));
-
-            showMessage("Post liked.");
         } catch {
             showMessage(
                 "Could not connect to backend."
@@ -622,8 +615,6 @@ function App() {
                 ...current,
                 [postId]: false,
             }));
-
-            showMessage("Post unliked.");
         } catch {
             showMessage(
                 "Could not connect to backend."
@@ -638,15 +629,15 @@ function App() {
     }, [token]);
 
     /*
-     * =========================
+     * ========================================
      * LANDING PAGE
-     * =========================
+     * ========================================
      */
 
     if (!token && !showAuth) {
         return (
             <div className="landing-page">
-                <header className="landing-nav">
+                <nav className="landing-nav">
                     <div className="landing-logo">
                         miniSocial
                     </div>
@@ -656,12 +647,11 @@ function App() {
                         onClick={() => {
                             setAuthMode("login");
                             setShowAuth(true);
-                            setMessage("");
                         }}
                     >
                         Log in
                     </button>
-                </header>
+                </nav>
 
                 <main className="landing-main">
                     <section className="hero">
@@ -676,21 +666,21 @@ function App() {
                         </h1>
 
                         <p className="hero-description">
-                            A quieter social network where
-                            your username is your identity.
-                            Share thoughts, join conversations,
-                            and keep your real identity out of
-                            the spotlight.
+                            A social space where the
+                            conversation comes first.
+                            Use a username, share what's
+                            on your mind, and keep your
+                            real-world identity out of
+                            the feed.
                         </p>
 
                         <div className="hero-actions">
                             <button
                                 className="primary-button hero-button"
                                 onClick={() => {
-                                    setAuthMode("signup");
-                                    setAuthUsername("");
-                                    setAuthPassword("");
-                                    setMessage("");
+                                    setAuthMode(
+                                        "signup"
+                                    );
                                     setShowAuth(true);
                                 }}
                             >
@@ -700,93 +690,106 @@ function App() {
                             <button
                                 className="secondary-button hero-button"
                                 onClick={() => {
-                                    setAuthMode("login");
-                                    setAuthUsername("");
-                                    setAuthPassword("");
-                                    setMessage("");
+                                    setAuthMode(
+                                        "login"
+                                    );
                                     setShowAuth(true);
                                 }}
                             >
-                                Log in
+                                I have an account
                             </button>
                         </div>
                     </section>
 
                     <section className="principles">
-                        <div className="principle">
+                        <article className="principle">
                             <span className="principle-number">
                                 01
                             </span>
 
                             <div>
                                 <h3>
-                                    Pseudonymous by design
+                                    Privacy, without
+                                    the isolation
                                 </h3>
 
                                 <p>
-                                    People interact with your
-                                    username, not your
-                                    real-world identity.
+                                    Keep your real-world
+                                    identity out of the
+                                    feed. Show up through
+                                    a username and
+                                    participate on your
+                                    own terms.
                                 </p>
                             </div>
-                        </div>
+                        </article>
 
-                        <div className="principle">
+                        <article className="principle">
                             <span className="principle-number">
                                 02
                             </span>
 
                             <div>
                                 <h3>
-                                    No follower pressure
+                                    No email. No
+                                    personal profile.
+                                    Just join.
                                 </h3>
 
                                 <p>
-                                    Share something because
-                                    you want to say it, not
-                                    because you're building a
-                                    personal brand.
+                                    Create an account
+                                    with a username and
+                                    password. No email
+                                    address or personal
+                                    profile required to
+                                    start participating.
                                 </p>
                             </div>
-                        </div>
+                        </article>
 
-                        <div className="principle">
+                        <article className="principle">
                             <span className="principle-number">
                                 03
                             </span>
 
                             <div>
                                 <h3>
-                                    Conversations first
+                                    Conversations over
+                                    clout
                                 </h3>
 
                                 <p>
-                                    Posts, comments, and simple
-                                    interactions without the
-                                    clutter.
+                                    No follower counts,
+                                    personal-brand
+                                    pressure, or chasing
+                                    reach. Build a space
+                                    around conversations
+                                    worth having, not
+                                    numbers worth growing.
                                 </p>
                             </div>
-                        </div>
+                        </article>
                     </section>
 
-                    <section className="landing-footer">
-                        <span>
-                            Your identity stays yours.
-                        </span>
-
+                    <footer className="landing-footer">
                         <span>
                             miniSocial
                         </span>
-                    </section>
+
+                        <span>
+                            Less profile. More
+                            conversation.
+                        </span>
+                    </footer>
                 </main>
             </div>
         );
     }
 
     /*
-     * =========================
-     * LOGIN / SIGNUP
-     * =========================
+     * ========================================
+     * AUTH PAGE
+     * ========================================
      */
 
     if (!token && showAuth) {
@@ -795,10 +798,9 @@ function App() {
                 <div className="auth-box">
                     <button
                         className="text-button"
-                        onClick={() => {
-                            setShowAuth(false);
-                            setMessage("");
-                        }}
+                        onClick={() =>
+                            setShowAuth(false)
+                        }
                     >
                         ← Back
                     </button>
@@ -806,7 +808,8 @@ function App() {
                     <h1>miniSocial</h1>
 
                     <p className="muted">
-                        A simple social platform.
+                        Less profile. More
+                        conversation.
                     </p>
 
                     <div className="auth-tabs">
@@ -816,10 +819,9 @@ function App() {
                                     ? "tab active"
                                     : "tab"
                             }
-                            onClick={() => {
-                                setAuthMode("login");
-                                setMessage("");
-                            }}
+                            onClick={() =>
+                                setAuthMode("login")
+                            }
                         >
                             Login
                         </button>
@@ -830,10 +832,9 @@ function App() {
                                     ? "tab active"
                                     : "tab"
                             }
-                            onClick={() => {
-                                setAuthMode("signup");
-                                setMessage("");
-                            }}
+                            onClick={() =>
+                                setAuthMode("signup")
+                            }
                         >
                             Sign up
                         </button>
@@ -850,7 +851,7 @@ function App() {
                                 e.target.value
                             )
                         }
-                        placeholder="Username"
+                        placeholder="Choose a username"
                         autoComplete="username"
                     />
 
@@ -866,7 +867,7 @@ function App() {
                                 e.target.value
                             )
                         }
-                        placeholder="Password"
+                        placeholder="At least 8 characters"
                         autoComplete={
                             authMode === "login"
                                 ? "current-password"
@@ -882,9 +883,15 @@ function App() {
                         {loading
                             ? "Please wait..."
                             : authMode === "login"
-                              ? "Login"
+                              ? "Log in"
                               : "Create account"}
                     </button>
+
+                    {authMode === "signup" && (
+                        <p className="auth-note">
+                            No email address required.
+                        </p>
+                    )}
 
                     {message && (
                         <div className="message">
@@ -897,9 +904,9 @@ function App() {
     }
 
     /*
-     * =========================
-     * MAIN APP
-     * =========================
+     * ========================================
+     * APPLICATION
+     * ========================================
      */
 
     return (
@@ -912,7 +919,7 @@ function App() {
 
                     <div className="topbar-right">
                         <span className="user-label">
-                            @{username}
+                            User #{userId}
                         </span>
 
                         <button
@@ -960,7 +967,7 @@ function App() {
 
                 <div className="feed-header">
                     <h2>
-                        Latest posts
+                        Latest conversations
                     </h2>
 
                     <button
@@ -974,7 +981,7 @@ function App() {
                 <section className="posts">
                     {posts.length === 0 ? (
                         <div className="empty">
-                            No posts yet.
+                            No conversations yet.
                         </div>
                     ) : (
                         posts.map((post) => (
@@ -984,8 +991,8 @@ function App() {
                             >
                                 <div className="post-header">
                                     <strong>
-                                        {post.author?.username ||
-                                            "Unknown user"}
+                                        User #
+                                        {post.authorId}
                                     </strong>
 
                                     <time>
@@ -1004,7 +1011,8 @@ function App() {
                                             }
                                             onChange={(e) =>
                                                 setEditingContent(
-                                                    e.target.value
+                                                    e.target
+                                                        .value
                                                 )
                                             }
                                             maxLength={500}
@@ -1028,7 +1036,6 @@ function App() {
                                                     setEditingPostId(
                                                         null
                                                     );
-
                                                     setEditingContent(
                                                         ""
                                                     );
@@ -1092,7 +1099,6 @@ function App() {
                                                     setEditingPostId(
                                                         post.id
                                                     );
-
                                                     setEditingContent(
                                                         post.content
                                                     );
@@ -1146,10 +1152,10 @@ function App() {
                                                         >
                                                             <div className="comment-header">
                                                                 <strong>
-                                                                    {comment
-                                                                        .author
-                                                                        ?.username ||
-                                                                        "Unknown user"}
+                                                                    User #
+                                                                    {
+                                                                        comment.authorId
+                                                                    }
                                                                 </strong>
 
                                                                 <span>
@@ -1191,8 +1197,7 @@ function App() {
                                                 value={
                                                     commentInputs[
                                                         post.id
-                                                    ] ||
-                                                    ""
+                                                    ] || ""
                                                 }
                                                 onChange={(e) =>
                                                     setCommentInputs(
@@ -1201,7 +1206,8 @@ function App() {
                                                         ) => ({
                                                             ...current,
                                                             [post.id]:
-                                                                e.target
+                                                                e
+                                                                    .target
                                                                     .value,
                                                         })
                                                     )
