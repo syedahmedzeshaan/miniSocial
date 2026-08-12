@@ -1,6 +1,70 @@
 :root {
+    --background: #fafaf9;
+    --surface: #ffffff;
+    --surface-alt: #f5f5f4;
+
+    --text: #292524;
+    --muted: #78716c;
+
+    --border: #e7e5e4;
+    --border-strong: #d6d3d1;
+
+    --accent: #c27a59;
+    --accent-hover: #ae6849;
+    --accent-soft: #f3e3da;
+
+    --sage: #8a9a5b;
+    --sage-soft: #e7ecd9;
+
+    --danger: #b4534b;
+
+    --radius: 12px;
+    --radius-small: 8px;
+}
+
+[data-theme="dark"] {
+    --background: #171614;
+    --surface: #211f1c;
+    --surface-alt: #282521;
+
+    --text: #f5f2ed;
+    --muted: #a8a29e;
+
+    --border: #3b3834;
+    --border-strong: #504b46;
+
+    --accent: #c98260;
+    --accent-hover: #d89270;
+    --accent-soft: #3b2922;
+
+    --sage: #9baa6d;
+    --sage-soft: #303624;
+
+    --danger: #df766c;
+}
+
+/* ========================================
+   RESET
+======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    background: var(--background);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    background: var(--background);
+    color: var(--text);
+
     font-family:
-        Inter,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
@@ -9,28 +73,7 @@
         Arial,
         sans-serif;
 
-    color: #292524;
-    background: #fafaf9;
-
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-html {
-    background: #fafaf9;
-}
-
-body {
-    margin: 0;
-    min-width: 320px;
-    min-height: 100vh;
-
-    background: #fafaf9;
-    color: #292524;
+    line-height: 1.5;
 }
 
 button,
@@ -48,82 +91,81 @@ button:disabled {
     opacity: 0.55;
 }
 
+textarea,
+input {
+    color: var(--text);
+    background: var(--surface);
+}
+
 /* ========================================
-   SHARED
+   COMMON
 ======================================== */
 
-.muted {
-    color: #78716c;
+.primary-button,
+.secondary-button,
+.text-button,
+.theme-button {
+    border: 0;
 }
 
 .primary-button {
-    border: 1px solid #c27a59;
-    border-radius: 7px;
-
-    background: #c27a59;
+    background: var(--accent);
     color: #ffffff;
+
+    border-radius: var(--radius-small);
 
     padding: 9px 16px;
 
+    font-size: 14px;
     font-weight: 650;
+
+    transition:
+        background-color 120ms ease,
+        color 120ms ease;
 }
 
 .primary-button:hover {
-    background: #ad694b;
-    border-color: #ad694b;
+    background: var(--accent-hover);
 }
 
 .secondary-button {
-    border: 1px solid #d6d3d1;
-    border-radius: 7px;
+    background: var(--surface);
 
-    background: #ffffff;
-    color: #44403c;
+    color: var(--text);
+
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-small);
 
     padding: 8px 14px;
 
-    font-weight: 550;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .secondary-button:hover {
-    background: #f5f5f4;
-    border-color: #a8a29e;
+    background: var(--surface-alt);
 }
 
 .text-button {
-    border: 0;
     background: transparent;
+    color: var(--muted);
 
-    color: #c27a59;
+    padding: 4px 0;
 
-    padding: 5px 6px;
-
+    font-size: 14px;
     font-weight: 600;
 }
 
 .text-button:hover {
-    text-decoration: underline;
+    color: var(--text);
 }
 
-.danger {
-    color: #a14f3e !important;
+.text-button.danger {
+    color: var(--danger);
 }
 
-.message,
-.notice {
-    border: 1px solid #e5c5b5;
-    border-radius: 7px;
-
-    background: #fff8f4;
-    color: #57534e;
-
-    padding: 10px 12px;
-
-    font-size: 14px;
-}
-
-.message {
-    margin-top: 16px;
+.muted {
+    color: var(--muted);
 }
 
 /* ========================================
@@ -132,32 +174,38 @@ button:disabled {
 
 .landing-page {
     min-height: 100vh;
-    background: #fafaf9;
+    background: var(--background);
 }
 
 .landing-nav {
-    width: min(1080px, calc(100% - 40px));
-    height: 72px;
+    width: min(1180px, calc(100% - 48px));
 
     margin: 0 auto;
+
+    height: 72px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    border-bottom: 1px solid #e7e5e4;
+    border-bottom: 1px solid var(--border);
 }
 
 .landing-logo {
-    color: #292524;
-
     font-size: 20px;
     font-weight: 750;
     letter-spacing: -0.5px;
 }
 
+.landing-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .landing-main {
-    width: min(1080px, calc(100% - 40px));
+    width: min(1180px, calc(100% - 48px));
+
     margin: 0 auto;
 }
 
@@ -168,34 +216,35 @@ button:disabled {
 }
 
 .eyebrow {
-    margin: 0 0 20px;
+    margin: 0 0 22px;
 
-    color: #8a9a5b;
+    color: var(--accent);
 
     font-size: 12px;
     font-weight: 750;
-    letter-spacing: 1.4px;
+
+    letter-spacing: 1.6px;
 }
 
 .hero h1 {
     margin: 0;
 
-    color: #292524;
+    color: var(--text);
 
-    font-size: clamp(48px, 7vw, 78px);
+    font-size: clamp(52px, 7vw, 86px);
     line-height: 0.98;
+
     letter-spacing: -4px;
-    font-weight: 750;
 }
 
 .hero-description {
-    max-width: 560px;
+    max-width: 610px;
 
-    margin: 28px 0 0;
+    margin: 30px 0 0;
 
-    color: #78716c;
+    color: var(--muted);
 
-    font-size: 18px;
+    font-size: 19px;
     line-height: 1.65;
 }
 
@@ -203,81 +252,74 @@ button:disabled {
     display: flex;
     gap: 10px;
 
-    margin-top: 32px;
+    margin-top: 34px;
 }
 
 .hero-button {
-    min-width: 130px;
     padding: 11px 18px;
 }
 
 /* ========================================
-   LANDING PRINCIPLES
+   PRINCIPLES
 ======================================== */
 
 .principles {
-    border-top: 1px solid #e7e5e4;
-    border-bottom: 1px solid #e7e5e4;
+    border-top: 1px solid var(--border);
 }
 
 .principle {
     display: grid;
-    grid-template-columns: 70px 1fr;
-    gap: 20px;
+    grid-template-columns: 90px 1fr;
 
-    padding: 28px 0;
+    gap: 30px;
 
-    border-bottom: 1px solid #e7e5e4;
-}
+    padding: 38px 0;
 
-.principle:last-child {
-    border-bottom: 0;
+    border-bottom: 1px solid var(--border);
 }
 
 .principle-number {
-    color: #c27a59;
+    color: var(--accent);
 
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 750;
+
+    padding-top: 4px;
 }
 
 .principle h3 {
-    margin: 0 0 7px;
+    margin: 0;
 
-    color: #292524;
+    font-size: 22px;
+    line-height: 1.3;
 
-    font-size: 17px;
-    font-weight: 700;
+    letter-spacing: -0.4px;
 }
 
 .principle p {
-    max-width: 600px;
+    max-width: 650px;
 
-    margin: 0;
+    margin: 10px 0 0;
 
-    color: #78716c;
+    color: var(--muted);
 
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 16px;
+    line-height: 1.65;
 }
-
-/* ========================================
-   LANDING FOOTER
-======================================== */
 
 .landing-footer {
     display: flex;
     justify-content: space-between;
 
-    padding: 26px 0 40px;
+    padding: 28px 0 40px;
 
-    color: #a8a29e;
+    color: var(--muted);
 
-    font-size: 12px;
+    font-size: 13px;
 }
 
 /* ========================================
-   AUTH PAGE
+   AUTH
 ======================================== */
 
 .auth-page {
@@ -289,150 +331,145 @@ button:disabled {
 
     padding: 24px;
 
-    background: #fafaf9;
+    background: var(--background);
 }
 
 .auth-box {
-    width: 100%;
-    max-width: 400px;
+    width: min(420px, 100%);
 
-    padding: 32px;
+    background: var(--surface);
 
-    background: #ffffff;
+    border: 1px solid var(--border);
 
-    border: 1px solid #e7e5e4;
-    border-radius: 10px;
+    border-radius: 14px;
+
+    padding: 30px;
 }
 
 .auth-box > .text-button {
-    margin: -8px 0 18px -6px;
+    margin-bottom: 26px;
 }
 
 .auth-box h1 {
     margin: 0;
 
-    color: #292524;
-
-    font-size: 28px;
-    font-weight: 750;
-    letter-spacing: -0.7px;
+    font-size: 30px;
+    letter-spacing: -1px;
 }
 
 .auth-box > .muted {
-    margin: 7px 0 26px;
+    margin: 5px 0 26px;
 }
-
-/* ========================================
-   AUTH TABS
-======================================== */
 
 .auth-tabs {
     display: grid;
     grid-template-columns: 1fr 1fr;
 
-    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
 
-    border-bottom: 1px solid #e7e5e4;
+    margin-bottom: 24px;
 }
 
 .tab {
-    border: 0;
     background: transparent;
 
-    color: #78716c;
+    border: 0;
+    border-bottom: 2px solid transparent;
+
+    color: var(--muted);
 
     padding: 11px 8px;
-
-    border-bottom: 2px solid transparent;
-}
-
-.tab:hover {
-    color: #292524;
-}
-
-.tab.active {
-    color: #292524;
-
-    border-bottom-color: #c27a59;
 
     font-weight: 650;
 }
 
-/* ========================================
-   INPUTS
-======================================== */
+.tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
 
 .auth-box label {
     display: block;
 
     margin: 16px 0 7px;
 
-    color: #44403c;
+    color: var(--text);
 
     font-size: 13px;
     font-weight: 650;
 }
 
-input,
-textarea {
+.auth-box input {
     width: 100%;
 
-    border: 1px solid #d6d3d1;
-    border-radius: 7px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-small);
 
-    background: #ffffff;
-    color: #292524;
+    padding: 11px 12px;
 
     outline: none;
+
+    font-size: 15px;
 }
 
-input {
-    height: 44px;
-    padding: 0 13px;
+.auth-box input:focus {
+    border-color: var(--accent);
 }
 
-textarea {
-    min-height: 100px;
+.auth-box .primary-button {
+    width: 100%;
 
-    padding: 12px 13px;
+    margin-top: 24px;
 
-    resize: vertical;
+    padding: 11px;
 }
 
-input:focus,
-textarea:focus {
-    border-color: #c27a59;
+.auth-note {
+    margin: 13px 0 0;
 
-    outline: 2px solid #f0d8ca;
-    outline-offset: 1px;
+    color: var(--muted);
+
+    text-align: center;
+
+    font-size: 13px;
 }
 
-input::placeholder,
-textarea::placeholder {
-    color: #a8a29e;
-}
+.message {
+    margin-top: 16px;
 
-.auth-box > .primary-button {
-    margin-top: 12px;
+    padding: 10px 12px;
+
+    border-radius: var(--radius-small);
+
+    background: var(--accent-soft);
+    color: var(--text);
+
+    font-size: 13px;
 }
 
 /* ========================================
-   TOP BAR
+   APP / TOP BAR
 ======================================== */
+
+.app-shell {
+    min-height: 100vh;
+    background: var(--background);
+}
 
 .topbar {
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 20;
 
-    border-bottom: 1px solid #e7e5e4;
+    background: var(--surface);
 
-    background: #ffffff;
+    border-bottom: 1px solid var(--border);
 }
 
 .topbar-inner {
-    width: min(760px, calc(100% - 32px));
-    min-height: 58px;
+    width: min(720px, calc(100% - 32px));
+
+    height: 62px;
 
     margin: 0 auto;
 
@@ -441,33 +478,51 @@ textarea::placeholder {
     justify-content: space-between;
 }
 
-.topbar-inner > strong {
-    color: #292524;
-
+.topbar-logo {
     font-size: 19px;
     font-weight: 750;
+
     letter-spacing: -0.4px;
 }
 
 .topbar-right {
     display: flex;
     align-items: center;
-    gap: 12px;
+
+    gap: 10px;
 }
 
 .user-label {
-    color: #78716c;
+    color: var(--muted);
 
     font-size: 14px;
     font-weight: 600;
 }
 
-.topbar .secondary-button {
-    padding: 7px 12px;
+.theme-button {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+
+    background: var(--surface);
+
+    color: var(--text);
+
+    font-size: 16px;
+}
+
+.theme-button:hover {
+    background: var(--surface-alt);
 }
 
 /* ========================================
-   MAIN FEED
+   FEED
 ======================================== */
 
 .feed {
@@ -475,54 +530,165 @@ textarea::placeholder {
 
     margin: 0 auto;
 
-    padding: 24px 0 60px;
+    padding: 24px 0 80px;
 }
 
 .notice {
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+
+    padding: 10px 14px;
+
+    background: var(--accent-soft);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    font-size: 14px;
 }
 
 /* ========================================
-   POST COMPOSER
+   TWEET
 ======================================== */
 
-.composer {
-    padding: 17px;
+.tweet-feed {
+    display: flex;
+    flex-direction: column;
 
-    background: #ffffff;
-
-    border: 1px solid #e7e5e4;
-    border-radius: 10px;
+    gap: 14px;
 }
 
-.composer textarea {
-    min-height: 105px;
+.tweet {
+    display: flex;
+
+    gap: 13px;
+
+    padding: 20px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+}
+
+.tweet:hover {
+    border-color: var(--border-strong);
+}
+
+.tweet-avatar {
+    flex: 0 0 auto;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--accent-soft);
+
+    color: var(--accent);
+
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.tweet-main {
+    min-width: 0;
+    flex: 1;
+}
+
+.tweet-header {
+    display: flex;
+    align-items: baseline;
+
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.tweet-author {
+    color: var(--text);
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.tweet-time {
+    color: var(--muted);
+
+    font-size: 13px;
+
+    white-space: nowrap;
+}
+
+.tweet-content {
+    margin-top: 10px;
+
+    color: var(--text);
+
+    font-size: 16px;
+    line-height: 1.55;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+}
+
+/* ========================================
+   COMPOSER
+======================================== */
+
+.composer-tweet {
+    margin-bottom: 26px;
+}
+
+.tweet-input {
+    display: block;
+
+    width: 100%;
+
+    min-height: 72px;
+
+    margin-top: 8px;
+
+    padding: 8px 0;
 
     border: 0;
 
-    padding: 2px;
-
-    resize: none;
-}
-
-.composer textarea:focus {
     outline: none;
-    border: 0;
+
+    resize: vertical;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-size: 17px;
+    line-height: 1.5;
 }
 
-.composer-footer {
+.tweet-input::placeholder {
+    color: var(--muted);
+}
+
+.tweet-composer-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    margin-top: 9px;
-    padding-top: 10px;
+    margin-top: 8px;
 
-    border-top: 1px solid #f0efed;
+    padding-top: 12px;
+
+    border-top: 1px solid var(--border);
 }
 
-.character-count {
-    color: #a8a29e;
+.tweet-composer-footer > span {
+    color: var(--muted);
 
     font-size: 12px;
 }
@@ -536,172 +702,183 @@ textarea::placeholder {
     align-items: center;
     justify-content: space-between;
 
-    margin: 28px 0 12px;
+    margin-bottom: 14px;
+
+    padding: 0 2px;
 }
 
 .feed-header h2 {
     margin: 0;
 
-    color: #292524;
-
     font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.2px;
+    letter-spacing: -0.3px;
 }
 
 /* ========================================
-   POSTS
+   TWEET ACTIONS
 ======================================== */
 
-.posts {
-    display: flex;
-    flex-direction: column;
-}
-
-.post {
-    padding: 20px 0;
-
-    background: #ffffff;
-
-    border-top: 1px solid #e7e5e4;
-}
-
-.post:first-child {
-    border-top: 0;
-}
-
-.post-header {
+.tweet-actions {
     display: flex;
     align-items: center;
-    justify-content: space-between;
 
-    gap: 14px;
+    gap: 6px;
 
-    margin-bottom: 9px;
+    margin-top: 17px;
+    padding-top: 12px;
+
+    border-top: 1px solid var(--border);
 }
 
-.post-header strong {
-    color: #292524;
-
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.post-header time {
-    color: #a8a29e;
-
-    font-size: 11px;
-}
-
-.post-content {
-    color: #44403c;
-
-    font-size: 15px;
-    line-height: 1.6;
-
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-}
-
-.post > textarea {
-    margin-bottom: 10px;
-}
-
-/* ========================================
-   POST ACTIONS
-======================================== */
-
-.post-actions {
-    display: flex;
+.tweet-action {
+    display: inline-flex;
     align-items: center;
-    gap: 5px;
-    flex-wrap: wrap;
 
-    margin-top: 14px;
-}
+    gap: 6px;
 
-.action-button {
+    padding: 5px 8px;
+
     border: 0;
     border-radius: 6px;
 
     background: transparent;
-    color: #78716c;
 
-    padding: 7px 9px;
+    color: var(--muted);
 
     font-size: 13px;
+    font-weight: 600;
 }
 
-.action-button:hover {
-    background: #f5f5f4;
-    color: #292524;
+.tweet-action:hover {
+    background: var(--surface-alt);
+    color: var(--text);
 }
 
-.action-button.liked {
-    background: #f1e4dc;
-    color: #a65f43;
+.tweet-action.liked {
+    color: var(--accent);
+}
+
+.tweet-action.danger {
+    color: var(--danger);
+}
+
+/* ========================================
+   EDIT POST
+======================================== */
+
+.edit-area {
+    margin-top: 10px;
+}
+
+.tweet-edit-input {
+    width: 100%;
+
+    min-height: 110px;
+
+    padding: 11px;
+
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-small);
+
+    outline: none;
+
+    resize: vertical;
+
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.tweet-edit-input:focus {
+    border-color: var(--accent);
+}
+
+.inline-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 10px;
 }
 
 /* ========================================
    COMMENTS
 ======================================== */
 
-.comments {
-    margin-top: 14px;
-    padding: 15px;
+.tweet-comments {
+    margin-top: 16px;
 
-    border-left: 2px solid #d4a373;
+    padding-top: 16px;
 
-    background: #fafaf9;
+    border-top: 1px solid var(--border);
 }
 
-.comments > strong {
-    color: #57534e;
+.comments-title {
+    margin-bottom: 12px;
 
-    font-size: 13px;
-}
+    color: var(--text);
 
-.comment-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .comment {
-    padding: 11px 12px;
+    display: flex;
 
-    border: 1px solid #e7e5e4;
-    border-radius: 7px;
+    gap: 10px;
 
-    background: #ffffff;
+    padding: 12px 0;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.comment-avatar {
+    flex: 0 0 auto;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--sage-soft);
+
+    color: var(--sage);
+
+    font-size: 10px;
+    font-weight: 750;
+}
+
+.comment-main {
+    min-width: 0;
+    flex: 1;
 }
 
 .comment-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: baseline;
 
-    gap: 10px;
+    gap: 5px;
 }
 
 .comment-header strong {
-    color: #292524;
-
     font-size: 13px;
 }
 
 .comment-header span {
-    color: #a8a29e;
+    color: var(--muted);
 
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .comment p {
-    margin: 7px 0;
+    margin: 5px 0 7px;
 
-    color: #57534e;
+    color: var(--text);
 
     font-size: 14px;
     line-height: 1.5;
@@ -711,45 +888,60 @@ textarea::placeholder {
 
 .comment-composer {
     display: flex;
-    gap: 7px;
 
-    margin-top: 11px;
+    gap: 8px;
+
+    margin-top: 14px;
 }
 
 .comment-composer input {
+    min-width: 0;
     flex: 1;
-    height: 38px;
+
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-small);
+
+    padding: 9px 11px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+.comment-composer input:focus {
+    border-color: var(--accent);
 }
 
 .comment-composer .primary-button {
-    padding: 7px 12px;
-
-    white-space: nowrap;
+    flex: 0 0 auto;
 }
 
 /* ========================================
-   INLINE ACTIONS
+   EMPTY STATE
 ======================================== */
 
-.inline-actions {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-}
-
-/* ========================================
-   EMPTY
-======================================== */
-
-.empty {
-    padding: 40px 20px;
-
-    border-top: 1px solid #e7e5e4;
-    border-bottom: 1px solid #e7e5e4;
-
-    color: #a8a29e;
+.empty-state {
+    padding: 55px 20px;
 
     text-align: center;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+}
+
+.empty-state h3 {
+    margin: 0;
+
+    font-size: 18px;
+}
+
+.empty-state p {
+    margin: 6px 0 0;
+
+    color: var(--muted);
 
     font-size: 14px;
 }
@@ -758,27 +950,71 @@ textarea::placeholder {
    MOBILE
 ======================================== */
 
-@media (max-width: 600px) {
-    .landing-nav {
-        width: calc(100% - 24px);
-        height: 62px;
-    }
-
+@media (max-width: 700px) {
+    .landing-nav,
     .landing-main {
-        width: calc(100% - 24px);
+        width: min(100% - 32px, 680px);
     }
 
     .hero {
-        padding: 72px 0 65px;
+        padding: 75px 0 70px;
     }
 
     .hero h1 {
-        font-size: 50px;
-        letter-spacing: -2.5px;
+        font-size: clamp(48px, 13vw, 68px);
+        letter-spacing: -3px;
     }
 
     .hero-description {
-        font-size: 16px;
+        font-size: 17px;
+    }
+
+    .principle {
+        grid-template-columns: 55px 1fr;
+
+        gap: 18px;
+    }
+
+    .landing-footer {
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+    .feed {
+        width: calc(100% - 20px);
+
+        padding-top: 14px;
+    }
+
+    .topbar-inner {
+        width: calc(100% - 20px);
+    }
+
+    .tweet {
+        padding: 16px;
+
+        border-radius: 12px;
+    }
+
+    .tweet-actions {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 520px) {
+    .landing-nav {
+        height: 62px;
+    }
+
+    .hero {
+        padding: 60px 0 55px;
+    }
+
+    .hero h1 {
+        font-size: 46px;
+
+        letter-spacing: -2.5px;
     }
 
     .hero-actions {
@@ -790,52 +1026,60 @@ textarea::placeholder {
     }
 
     .principle {
-        grid-template-columns: 45px 1fr;
-        gap: 10px;
+        display: block;
+
+        padding: 30px 0;
     }
 
-    .landing-footer {
-        flex-direction: column;
-        gap: 8px;
+    .principle-number {
+        display: block;
+
+        margin-bottom: 12px;
+    }
+
+    .auth-page {
+        align-items: flex-start;
+
+        padding: 16px;
+
+        padding-top: 40px;
     }
 
     .auth-box {
-        padding: 26px 20px;
-    }
-
-    .feed {
-        width: calc(100% - 24px);
-        padding-top: 16px;
+        padding: 24px 20px;
     }
 
     .topbar-inner {
-        width: calc(100% - 24px);
+        height: 58px;
     }
 
     .topbar-right {
-        gap: 7px;
+        gap: 6px;
     }
 
     .user-label {
-        max-width: 120px;
-
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        display: none;
     }
 
-    .post {
-        padding: 17px 0;
+    .tweet {
+        gap: 10px;
+
+        padding: 14px;
     }
 
-    .post-header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 4px;
+    .tweet-avatar {
+        width: 36px;
+        height: 36px;
+
+        font-size: 11px;
     }
 
-    .comments {
-        padding: 12px;
+    .tweet-content {
+        font-size: 15px;
+    }
+
+    .tweet-action {
+        padding: 5px 6px;
     }
 
     .comment-composer {
@@ -845,4 +1089,16 @@ textarea::placeholder {
     .comment-composer .primary-button {
         width: 100%;
     }
+}
+
+/* ========================================
+   ACCESSIBILITY
+======================================== */
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--accent);
+
+    outline-offset: 2px;
 }

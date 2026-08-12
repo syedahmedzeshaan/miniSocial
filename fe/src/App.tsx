@@ -66,6 +66,15 @@ function getUserIdFromToken(token: string): number | null {
     }
 }
 
+function formatDate(date: string) {
+    return new Date(date).toLocaleString([], {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+    });
+}
+
 function App() {
     const [token, setToken] = useState<string | null>(
         localStorage.getItem("token")
@@ -112,6 +121,10 @@ function App() {
         Record<number, boolean>
     >({});
 
+    const [darkMode, setDarkMode] = useState(
+        localStorage.getItem("theme") === "dark"
+    );
+
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -127,6 +140,18 @@ function App() {
             setMessage("");
         }, 3000);
     }
+
+    useEffect(() => {
+        document.documentElement.setAttribute(
+            "data-theme",
+            darkMode ? "dark" : "light"
+        );
+
+        localStorage.setItem(
+            "theme",
+            darkMode ? "dark" : "light"
+        );
+    }, [darkMode]);
 
     async function handleAuth() {
         setLoading(true);
@@ -305,7 +330,7 @@ function App() {
 
             setNewPost("");
 
-            showMessage("Post created.");
+            showMessage("Posted.");
         } catch {
             showMessage(
                 "Could not connect to backend."
@@ -404,7 +429,9 @@ function App() {
 
             setComments((current) => {
                 const copy = { ...current };
+
                 delete copy[postId];
+
                 return copy;
             });
 
@@ -629,9 +656,7 @@ function App() {
     }, [token]);
 
     /*
-     * ========================================
      * LANDING PAGE
-     * ========================================
      */
 
     if (!token && !showAuth) {
@@ -642,15 +667,29 @@ function App() {
                         miniSocial
                     </div>
 
-                    <button
-                        className="secondary-button"
-                        onClick={() => {
-                            setAuthMode("login");
-                            setShowAuth(true);
-                        }}
-                    >
-                        Log in
-                    </button>
+                    <div className="landing-nav-actions">
+                        <button
+                            className="theme-button"
+                            onClick={() =>
+                                setDarkMode(
+                                    (current) =>
+                                        !current
+                                )
+                            }
+                        >
+                            {darkMode ? "☀" : "☾"}
+                        </button>
+
+                        <button
+                            className="secondary-button"
+                            onClick={() => {
+                                setAuthMode("login");
+                                setShowAuth(true);
+                            }}
+                        >
+                            Log in
+                        </button>
+                    </div>
                 </nav>
 
                 <main className="landing-main">
@@ -678,9 +717,7 @@ function App() {
                             <button
                                 className="primary-button hero-button"
                                 onClick={() => {
-                                    setAuthMode(
-                                        "signup"
-                                    );
+                                    setAuthMode("signup");
                                     setShowAuth(true);
                                 }}
                             >
@@ -690,9 +727,7 @@ function App() {
                             <button
                                 className="secondary-button hero-button"
                                 onClick={() => {
-                                    setAuthMode(
-                                        "login"
-                                    );
+                                    setAuthMode("login");
                                     setShowAuth(true);
                                 }}
                             >
@@ -772,9 +807,7 @@ function App() {
                     </section>
 
                     <footer className="landing-footer">
-                        <span>
-                            miniSocial
-                        </span>
+                        <span>miniSocial</span>
 
                         <span>
                             Less profile. More
@@ -787,9 +820,7 @@ function App() {
     }
 
     /*
-     * ========================================
      * AUTH PAGE
-     * ========================================
      */
 
     if (!token && showAuth) {
@@ -840,9 +871,7 @@ function App() {
                         </button>
                     </div>
 
-                    <label>
-                        Username
-                    </label>
+                    <label>Username</label>
 
                     <input
                         value={authUsername}
@@ -855,9 +884,7 @@ function App() {
                         autoComplete="username"
                     />
 
-                    <label>
-                        Password
-                    </label>
+                    <label>Password</label>
 
                     <input
                         type="password"
@@ -904,16 +931,14 @@ function App() {
     }
 
     /*
-     * ========================================
-     * APPLICATION
-     * ========================================
+     * MAIN APPLICATION
      */
 
     return (
-        <>
+        <div className="app-shell">
             <header className="topbar">
                 <div className="topbar-inner">
-                    <strong>
+                    <strong className="topbar-logo">
                         miniSocial
                     </strong>
 
@@ -921,6 +946,19 @@ function App() {
                         <span className="user-label">
                             User #{userId}
                         </span>
+
+                        <button
+                            className="theme-button"
+                            onClick={() =>
+                                setDarkMode(
+                                    (current) =>
+                                        !current
+                                )
+                            }
+                            aria-label="Toggle theme"
+                        >
+                            {darkMode ? "☀" : "☾"}
+                        </button>
 
                         <button
                             className="secondary-button"
@@ -939,36 +977,52 @@ function App() {
                     </div>
                 )}
 
-                <section className="composer">
-                    <textarea
-                        value={newPost}
-                        onChange={(e) =>
-                            setNewPost(
-                                e.target.value
-                            )
-                        }
-                        placeholder="What's on your mind?"
-                        maxLength={500}
-                    />
+                {/* NEW POST */}
 
-                    <div className="composer-footer">
-                        <span className="character-count">
-                            {newPost.length}/500
-                        </span>
+                <section className="tweet composer-tweet">
+                    <div className="tweet-avatar">
+                        {userId}
+                    </div>
 
-                        <button
-                            className="primary-button"
-                            onClick={createPost}
-                        >
-                            Post
-                        </button>
+                    <div className="tweet-main">
+                        <div className="tweet-author">
+                            User #{userId}
+                        </div>
+
+                        <textarea
+                            className="tweet-input"
+                            value={newPost}
+                            onChange={(e) =>
+                                setNewPost(
+                                    e.target.value
+                                )
+                            }
+                            placeholder="What's happening?"
+                            maxLength={500}
+                        />
+
+                        <div className="tweet-composer-footer">
+                            <span>
+                                {newPost.length}/500
+                            </span>
+
+                            <button
+                                className="primary-button"
+                                onClick={createPost}
+                                disabled={
+                                    !newPost.trim()
+                                }
+                            >
+                                Post
+                            </button>
+                        </div>
                     </div>
                 </section>
 
+                {/* FEED HEADER */}
+
                 <div className="feed-header">
-                    <h2>
-                        Latest conversations
-                    </h2>
+                    <h2>Latest</h2>
 
                     <button
                         className="text-button"
@@ -978,164 +1032,203 @@ function App() {
                     </button>
                 </div>
 
-                <section className="posts">
+                {/* TWEETS */}
+
+                <section className="tweet-feed">
                     {posts.length === 0 ? (
-                        <div className="empty">
-                            No conversations yet.
+                        <div className="empty-state">
+                            <h3>
+                                Nothing here yet.
+                            </h3>
+
+                            <p>
+                                Start the conversation.
+                            </p>
                         </div>
                     ) : (
                         posts.map((post) => (
                             <article
-                                className="post"
+                                className="tweet"
                                 key={post.id}
                             >
-                                <div className="post-header">
-                                    <strong>
-                                        User #
-                                        {post.authorId}
-                                    </strong>
-
-                                    <time>
-                                        {new Date(
-                                            post.created_at
-                                        ).toLocaleString()}
-                                    </time>
+                                <div className="tweet-avatar">
+                                    {post.authorId}
                                 </div>
 
-                                {editingPostId ===
-                                post.id ? (
-                                    <>
-                                        <textarea
-                                            value={
-                                                editingContent
+                                <div className="tweet-main">
+                                    <div className="tweet-header">
+                                        <div className="tweet-author">
+                                            User #
+                                            {
+                                                post.authorId
                                             }
-                                            onChange={(e) =>
-                                                setEditingContent(
-                                                    e.target
-                                                        .value
+                                        </div>
+
+                                        <span className="tweet-time">
+                                            ·{" "}
+                                            {formatDate(
+                                                post.created_at
+                                            )}
+                                        </span>
+                                    </div>
+
+                                    {editingPostId ===
+                                    post.id ? (
+                                        <div className="edit-area">
+                                            <textarea
+                                                className="tweet-edit-input"
+                                                value={
+                                                    editingContent
+                                                }
+                                                onChange={(e) =>
+                                                    setEditingContent(
+                                                        e
+                                                            .target
+                                                            .value
+                                                    )
+                                                }
+                                                maxLength={
+                                                    500
+                                                }
+                                            />
+
+                                            <div className="inline-actions">
+                                                <button
+                                                    className="primary-button"
+                                                    onClick={() =>
+                                                        updatePost(
+                                                            post.id
+                                                        )
+                                                    }
+                                                >
+                                                    Save
+                                                </button>
+
+                                                <button
+                                                    className="secondary-button"
+                                                    onClick={() => {
+                                                        setEditingPostId(
+                                                            null
+                                                        );
+                                                        setEditingContent(
+                                                            ""
+                                                        );
+                                                    }}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="tweet-content">
+                                            {
+                                                post.content
+                                            }
+                                        </div>
+                                    )}
+
+                                    <div className="tweet-actions">
+                                        <button
+                                            className={
+                                                likedPosts[
+                                                    post.id
+                                                ]
+                                                    ? "tweet-action liked"
+                                                    : "tweet-action"
+                                            }
+                                            onClick={() =>
+                                                likedPosts[
+                                                    post.id
+                                                ]
+                                                    ? unlikePost(
+                                                          post.id
+                                                      )
+                                                    : likePost(
+                                                          post.id
+                                                      )
+                                            }
+                                        >
+                                            <span>
+                                                {likedPosts[
+                                                    post.id
+                                                ]
+                                                    ? "♥"
+                                                    : "♡"}
+                                            </span>
+
+                                            <span>
+                                                {likedPosts[
+                                                    post.id
+                                                ]
+                                                    ? "Liked"
+                                                    : "Like"}
+                                            </span>
+                                        </button>
+
+                                        <button
+                                            className="tweet-action"
+                                            onClick={() =>
+                                                fetchComments(
+                                                    post.id
                                                 )
                                             }
-                                            maxLength={500}
-                                        />
+                                        >
+                                            <span>
+                                                💬
+                                            </span>
 
-                                        <div className="inline-actions">
-                                            <button
-                                                className="primary-button"
-                                                onClick={() =>
-                                                    updatePost(
-                                                        post.id
-                                                    )
-                                                }
-                                            >
-                                                Save
-                                            </button>
+                                            <span>
+                                                Comments
+                                            </span>
+                                        </button>
 
-                                            <button
-                                                className="secondary-button"
-                                                onClick={() => {
-                                                    setEditingPostId(
-                                                        null
-                                                    );
-                                                    setEditingContent(
-                                                        ""
-                                                    );
-                                                }}
-                                            >
-                                                Cancel
-                                            </button>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div className="post-content">
-                                        {post.content}
+                                        {post.authorId ===
+                                            userId && (
+                                            <>
+                                                <button
+                                                    className="tweet-action"
+                                                    onClick={() => {
+                                                        setEditingPostId(
+                                                            post.id
+                                                        );
+
+                                                        setEditingContent(
+                                                            post.content
+                                                        );
+                                                    }}
+                                                >
+                                                    Edit
+                                                </button>
+
+                                                <button
+                                                    className="tweet-action danger"
+                                                    onClick={() =>
+                                                        deletePost(
+                                                            post.id
+                                                        )
+                                                    }
+                                                >
+                                                    Delete
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
-                                )}
 
-                                <div className="post-actions">
-                                    <button
-                                        className={
-                                            likedPosts[
-                                                post.id
-                                            ]
-                                                ? "action-button liked"
-                                                : "action-button"
-                                        }
-                                        onClick={() =>
-                                            likedPosts[
-                                                post.id
-                                            ]
-                                                ? unlikePost(
-                                                      post.id
-                                                  )
-                                                : likePost(
-                                                      post.id
-                                                  )
-                                        }
-                                    >
-                                        {likedPosts[
-                                            post.id
-                                        ]
-                                            ? "Unlike"
-                                            : "Like"}
-                                    </button>
+                                    {comments[
+                                        post.id
+                                    ] && (
+                                        <section className="tweet-comments">
+                                            <div className="comments-title">
+                                                Comments
+                                            </div>
 
-                                    <button
-                                        className="action-button"
-                                        onClick={() =>
-                                            fetchComments(
-                                                post.id
-                                            )
-                                        }
-                                    >
-                                        Comments
-                                    </button>
-
-                                    {post.authorId ===
-                                        userId && (
-                                        <>
-                                            <button
-                                                className="action-button"
-                                                onClick={() => {
-                                                    setEditingPostId(
-                                                        post.id
-                                                    );
-                                                    setEditingContent(
-                                                        post.content
-                                                    );
-                                                }}
-                                            >
-                                                Edit
-                                            </button>
-
-                                            <button
-                                                className="action-button danger"
-                                                onClick={() =>
-                                                    deletePost(
-                                                        post.id
-                                                    )
-                                                }
-                                            >
-                                                Delete
-                                            </button>
-                                        </>
-                                    )}
-                                </div>
-
-                                {comments[
-                                    post.id
-                                ] && (
-                                    <section className="comments">
-                                        <strong>
-                                            Comments
-                                        </strong>
-
-                                        <div className="comment-list">
                                             {comments[
                                                 post.id
                                             ].length ===
                                             0 ? (
                                                 <p className="muted">
-                                                    No comments yet.
+                                                    No comments
+                                                    yet.
                                                 </p>
                                             ) : (
                                                 comments[
@@ -1150,30 +1243,37 @@ function App() {
                                                                 comment.id
                                                             }
                                                         >
-                                                            <div className="comment-header">
-                                                                <strong>
-                                                                    User #
-                                                                    {
-                                                                        comment.authorId
-                                                                    }
-                                                                </strong>
-
-                                                                <span>
-                                                                    {new Date(
-                                                                        comment.created_at
-                                                                    ).toLocaleString()}
-                                                                </span>
+                                                            <div className="comment-avatar">
+                                                                {
+                                                                    comment.authorId
+                                                                }
                                                             </div>
 
-                                                            <p>
-                                                                {
-                                                                    comment.content
-                                                                }
-                                                            </p>
+                                                            <div className="comment-main">
+                                                                <div className="comment-header">
+                                                                    <strong>
+                                                                        User #
+                                                                        {
+                                                                            comment.authorId
+                                                                        }
+                                                                    </strong>
 
-                                                            {comment.authorId ===
-                                                                userId && (
-                                                                <div className="inline-actions">
+                                                                    <span>
+                                                                        ·{" "}
+                                                                        {formatDate(
+                                                                            comment.created_at
+                                                                        )}
+                                                                    </span>
+                                                                </div>
+
+                                                                <p>
+                                                                    {
+                                                                        comment.content
+                                                                    }
+                                                                </p>
+
+                                                                {comment.authorId ===
+                                                                    userId && (
                                                                     <button
                                                                         className="text-button danger"
                                                                         onClick={() =>
@@ -1184,57 +1284,60 @@ function App() {
                                                                     >
                                                                         Delete
                                                                     </button>
-                                                                </div>
-                                                            )}
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     )
                                                 )
                                             )}
-                                        </div>
 
-                                        <div className="comment-composer">
-                                            <input
-                                                value={
-                                                    commentInputs[
-                                                        post.id
-                                                    ] || ""
-                                                }
-                                                onChange={(e) =>
-                                                    setCommentInputs(
-                                                        (
-                                                            current
-                                                        ) => ({
-                                                            ...current,
-                                                            [post.id]:
-                                                                e
-                                                                    .target
-                                                                    .value,
-                                                        })
-                                                    )
-                                                }
-                                                placeholder="Write a comment..."
-                                                maxLength={500}
-                                            />
+                                            <div className="comment-composer">
+                                                <input
+                                                    value={
+                                                        commentInputs[
+                                                            post.id
+                                                        ] ||
+                                                        ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setCommentInputs(
+                                                            (
+                                                                current
+                                                            ) => ({
+                                                                ...current,
+                                                                [post.id]:
+                                                                    e
+                                                                        .target
+                                                                        .value,
+                                                            })
+                                                        )
+                                                    }
+                                                    placeholder="Write a reply..."
+                                                    maxLength={
+                                                        500
+                                                    }
+                                                />
 
-                                            <button
-                                                className="primary-button"
-                                                onClick={() =>
-                                                    createComment(
-                                                        post.id
-                                                    )
-                                                }
-                                            >
-                                                Comment
-                                            </button>
-                                        </div>
-                                    </section>
-                                )}
+                                                <button
+                                                    className="primary-button"
+                                                    onClick={() =>
+                                                        createComment(
+                                                            post.id
+                                                        )
+                                                    }
+                                                >
+                                                    Reply
+                                                </button>
+                                            </div>
+                                        </section>
+                                    )}
+                                </div>
                             </article>
                         ))
                     )}
                 </section>
             </main>
-        </>
+        </div>
     );
 }
 
