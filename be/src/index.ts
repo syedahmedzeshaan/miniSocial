@@ -4,11 +4,19 @@ import { z } from "zod";
 import jwt from "jsonwebtoken";
 import {auth} from "./auth";
 import {errorHandler} from "./error.ts";
+import cors from "cors";
 
 const jwt_secret = process.env["JWT_SECRET"]!;
 const port = process.env["PORT"];
 
 const app = express();
+
+app.use(express.json());
+app.use(cors({
+    origin: "http://localhost:5173"
+}));
+
+// add more origins during deploymnt
 
 app.use(express.json());
 
@@ -134,13 +142,20 @@ app.post("/post",auth,async (req,res)=>{
 
 
     const post = await prisma.post.create({
-        data:{
-            content:content,
-            created_at:new Date(),
-            updated_at:new Date(),
-            authorId:userId
+    data: {
+        content,
+        created_at: new Date(),
+        updated_at: new Date(),
+        authorId: userId
+    },
+    include: {
+        author: {
+            select: {
+                username: true
+            }
         }
-    });
+    }
+});
 
     return res.status(201).json({
         post
@@ -149,11 +164,18 @@ app.post("/post",auth,async (req,res)=>{
 
 app.get("/posts",auth,async(req,res)=>{
     const userId = req.userId;
-    const posts = (await prisma.post.findMany({
-        orderBy:{
-            created_at:"desc"
+    const posts = await prisma.post.findMany({
+    orderBy: {
+        created_at: "desc"
+    },
+    include: {
+        author: {
+            select: {
+                username: true
+            }
         }
-    }))
+    }
+});
     return res.json({
         posts
     })
@@ -163,10 +185,17 @@ app.get("/post/:id",auth,async(req,res)=>{
     const userId = req.userId;
     const postId = Number(req.params.id);
     const post = await prisma.post.findUnique({
-        where:{
-            id:postId
+    where: {
+        id: postId
+    },
+    include: {
+        author: {
+            select: {
+                username: true
+            }
         }
-    });
+    }
+});
     if (!post) {
     return res.status(404).json({
         message: "Post not found"
@@ -308,12 +337,19 @@ app.get("/post/:id/comments", auth , async(req,res)=>{
     const postId = Number(req.params.id);
 
     const comments = await prisma.comment.findMany({
-        where:{
-            postId
+    where: {
+        postId
+    },
+    include: {
+        author: {
+            select: {
+                username: true
+            }
         }
-    });
+    }
+});
 
-    return res.status(201).json({
+    return res.status(200).json({
         comments
     })
 })
@@ -342,13 +378,13 @@ app.patch("/comments/:id", auth , async (req,res)=>{
             id:commentId
         }
     });
-    if(comment === null){
+    if(!comment){
             return res.status(400).json({
                 "message":"No such comment exists"
             })
     }
 
-    if(comment.authorId != userId){
+    if(comment.authorId !== userId){
         return res.status(403).json({
             "message":"This is not your comment"
         })
