@@ -11,7 +11,8 @@
   },
   "private": true,
   "scripts": {
-    "dev": "bun index.ts"
+    "dev": "bun src/index.ts",
+    "test":"bun test.ts"
   },
   "type": "module",
   "dependencies": {
